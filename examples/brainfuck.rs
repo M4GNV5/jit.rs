@@ -133,7 +133,7 @@ fn run(ctx: &mut Context, code: &str) {
     });
 }
 fn main() {
-    let mut ctx = Context::new();
+    let mut ctx = Context::<()>::new();
     let mut args = env::args().skip(1);
     if let Some(ref script) = args.next() {
         let mut text = String::new();

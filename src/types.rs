@@ -1,7 +1,7 @@
 use raw::*;
+use util::oom;
 use compile::Compile;
 use function::Abi;
-use alloc::oom;
 use libc::{c_char, c_uint, c_void};
 use util::{from_ptr, from_ptr_opt};
 use std::borrow::*;
@@ -16,28 +16,28 @@ pub use kind::TypeKind;
 pub mod kind {
     use libc::c_int;
     bitflags!(
-        flags TypeKind: c_int {
-            const Void = 0,
-            const SByte = 1,
-            const UByte = 2,
-            const Short = 3,
-            const UShort = 4,
-            const Int = 5,
-            const UInt = 6,
-            const NInt = 7,
-            const NUInt = 8,
-            const Long = 9,
-            const ULong = 10,
-            const Float32 = 11,
-            const Float64 = 12,
-            const NFloat = 13,
-            const Struct = 14,
-            const Union = 15,
-            const Signature = 16,
-            const Pointer = 17,
-            const FirstTagged = 2,
-            const SysBool = 10009,
-            const SysChar = 10010
+        pub struct TypeKind: c_int {
+            const Void = 0;
+            const SByte = 1;
+            const UByte = 2;
+            const Short = 3;
+            const UShort = 4;
+            const Int = 5;
+            const UInt = 6;
+            const NInt = 7;
+            const NUInt = 8;
+            const Long = 9;
+            const ULong = 10;
+            const Float32 = 11;
+            const Float64 = 12;
+            const NFloat = 13;
+            const Struct = 14;
+            const Union = 15;
+            const Signature = 16;
+            const Pointer = 17;
+            const FirstTagged = 2;
+            const SysBool = 10009;
+            const SysChar = 10010;
         }
     );
 }
@@ -453,7 +453,7 @@ impl Ty {
                             .map(|name| name.as_bytes().as_ptr() as *mut c_char)
                             .collect::<Vec<_>>();
             if jit_type_set_names(self.into(), c_names.as_mut_ptr(), names.len() as u32) == 0 {
-                oom();
+                oom()
             }
         }
     }

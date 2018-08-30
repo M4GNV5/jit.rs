@@ -1,5 +1,5 @@
 use raw::*;
-use alloc::oom;
+use util::oom;
 use function::Func;
 use util::{from_ptr, from_ptr_opt};
 use std::marker::PhantomData;
@@ -35,7 +35,7 @@ pub struct Context<T = ()> {
 }
 native_ref!(Context<T>, _context: jit_context_t, marker = PhantomData);
 
-impl<T = ()> Index<i32> for Context<T> {
+impl<T> Index<i32> for Context<T> {
     type Output = T;
     fn index(&self, index: i32) -> &T {
         unsafe {
@@ -47,7 +47,7 @@ impl<T = ()> Index<i32> for Context<T> {
         }
     }
 }
-impl<T = ()> IndexMut<i32> for Context<T> {
+impl<T> IndexMut<i32> for Context<T> {
     fn index_mut(&mut self, index: i32) -> &mut T {
         unsafe {
             let meta = jit_context_get_meta(self.into(), index);
@@ -64,10 +64,10 @@ impl<T = ()> IndexMut<i32> for Context<T> {
         }
     }
 }
-impl<T = ()> Context<T> {
+impl<T> Context<T> {
     #[inline(always)]
     /// Create a new JIT Context
-    pub fn new() -> Context<T> {
+    pub fn new() -> Context {
         unsafe {
             from_ptr(jit_context_create())
         }
@@ -81,9 +81,10 @@ impl<T = ()> Context<T> {
         }
     }
 }
+/*TODO negative trait bound (see (rustc?) issue #13231)
 impl !Send for Context {
 
-}
+}*/
 impl<'a, T> IntoIterator for &'a Context<T> {
     type IntoIter = Functions<'a>;
     type Item = &'a Func;
